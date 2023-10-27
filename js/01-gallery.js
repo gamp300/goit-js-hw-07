@@ -23,8 +23,29 @@ galleryItems.forEach((element) => {
   image.setAttribute("alt", element.description);
 });
 
-gallery.addEventListener("click", (event) => {
-  event.preventDefault();
+const galleryImages = document.querySelectorAll(".gallery__image");
 
-  console.log(event.target);
+let modalOpen = false;
+
+galleryImages.forEach((image) => {
+  image.addEventListener("click", (e) => {
+    e.preventDefault();
+    const largeImage = e.target.dataset.source;
+
+    const instance = basicLightbox.create(`
+      <img src="${largeImage}" width="800" height="600">
+    `);
+
+    instance.show();
+    modalOpen = true;
+
+    document.addEventListener("keydown", closeModalKey);
+    function closeModalKey(e) {
+      if (e.key === "Escape") {
+        instance.close();
+        document.removeEventListener("keydown", closeModalKey);
+        modalOpen = false;
+      }
+    }
+  });
 });
